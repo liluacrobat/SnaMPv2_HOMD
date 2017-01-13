@@ -1,0 +1,4 @@
+.snakemake/
+*.pyc
+database/RDP/*
+database/GG/*
