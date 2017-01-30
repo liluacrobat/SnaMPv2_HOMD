@@ -12,13 +12,17 @@ def get_id_2_lable(tax_file):
     with open(tax_file) as f:
         for line in f:
             content = line.strip().split('\t')
-            taxa_id = int(content[0])
+            taxa_id = content[0]
             taxa_label = content[1]
             id_2_label[taxa_id] = taxa_label
     return id_2_label
 
 if __name__ == "__main__":
-    dfs = [pd.read_csv(x, sep='\t', index_col=0) for x in args.blast_res] 
+    dfs = []
+    for res in args.blast_res:
+        res_df = pd.read_csv(res, sep='\t', index_col=0)
+        res_df.index = res_df.index.astype('str')
+        dfs.append(res_df)
     df = dfs[0]
     for x in dfs[1:]:
         df = df.join(x, how='outer').fillna(0)

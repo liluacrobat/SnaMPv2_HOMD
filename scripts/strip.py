@@ -22,5 +22,5 @@ def strip_primer(in_fp, out_fp, head_len, tail_len):
         fo.write('%s\n' % read[head_len:-tail_len])
 
 if __name__ == '__main__':
-    strip_primer(args.input_fp, args.output_fp, 
+    strip_primer(args.input_fp, args.output_fp,
             len(args.forward_primer), len(args.reverse_primer))

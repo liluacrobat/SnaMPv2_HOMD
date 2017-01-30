@@ -30,7 +30,7 @@ if __name__ == "__main__":
     filtered_rate = pd.Series(["{:.2f}".format(x) for x in np.array(filtered_cnts).astype(float)/np.array(joined_cnts) * 100])
     blast_cnts = pd.Series([pd.read_csv(x, sep='\t', index_col=0).iloc[:, 0].sum() for x in args.blast_files])
     blast_rate = pd.Series(["{:.2f}".format(x) for x in np.array(blast_cnts).astype(float)/np.array(filtered_cnts) * 100])
-    
+
     df = pd.DataFrame(OrderedDict((
         ("#SampleID", sample_ids),
         ("Raw_count", raw_cnts),
@@ -40,6 +40,6 @@ if __name__ == "__main__":
         ("Merge_rate(%)", joined_rate),
         ("Pass_rate(%)", filtered_rate),
         ("Hit_rate(%)", blast_rate))))
-    
+
     df.to_csv(args.output_fp, sep='\t', index=False)
-    
+
