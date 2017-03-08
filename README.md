@@ -2,7 +2,7 @@
 
 ## Download pipeline
 ```bash
-git clone https://github.com/Wayne-Zen/SnaMP.git
+git clone https://github.com/vitmy0000/SnaMP.git
 ```
 
 ## Create environment
@@ -31,7 +31,7 @@ source deactivate
   * Closed reference OTU picking 
   * BLAST agaist HOMD database
 
-![workflow_0](misc/dag.pdf)
+![workflow_0](./misc/dag.pdf)
 
 ### Usage
 
