@@ -20,7 +20,7 @@ module load python/anaconda2-4.2.0
 source activate pyenvs/py35-snakemake
 ```
 
-## Remove environment 
+## Remove environment
 
 ```
 source deactivate
@@ -28,10 +28,10 @@ source deactivate
 
 ## Workflow
 
-  * Closed reference OTU picking 
+  * Closed reference OTU picking
   * BLAST agaist HOMD database
 
-![workflow_0](./misc/dag.pdf)
+![workflow_0](./misc/dag.png)
 
 ### Usage
 
@@ -53,7 +53,7 @@ source deactivate
   ```bash
   snakemake -p -j 100 --cluster-config cluster.json --cluster "sbatch --partition {cluster.partition} --time {cluster.time} --nodes {cluster.nodes} --ntasks-per-node {cluster.ntasks-per-node}"
   ```
-  
+
 ## Clean
 
   To remove generated files:
