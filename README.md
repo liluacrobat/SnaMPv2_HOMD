@@ -8,14 +8,13 @@ git clone https://github.com/vitmy0000/SnaMP.git
 ## Create environment
 
 ```bash
-# cd Projects
+module load python/anaconda2-4.2.0
 conda create -c bioconda -m -p pyenvs/py35-snakemake python=3.5 pandas snakemake
 ```
 
 ## Load environment
 
 ```bash
-# cd Projects
 module load python/anaconda2-4.2.0
 source activate pyenvs/py35-snakemake
 ```
