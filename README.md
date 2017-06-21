@@ -54,11 +54,17 @@ source deactivate
   snakemake -p -j 100 --cluster-config cluster.json --cluster "sbatch --partition {cluster.partition} --time {cluster.time} --nodes {cluster.nodes} --ntasks-per-node {cluster.ntasks-per-node}"
   ```
 
-## Clean
+## Misc
 
   To remove generated files:
   ```
   snakemake clean
+  ```
+
+  Check snakemake version:
+  ```
+  snakemake -v
+  # 3.13.2
   ```
 
 ## Known Issues

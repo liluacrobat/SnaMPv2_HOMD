@@ -24,11 +24,11 @@ def get_sample_ids(input_dir):
             raise Exception('{} not paired'.format(k))
         v.sort()
     return sorted(list(sample_id_2_gz_pair.keys()))
-        
+
 sample_ids = get_sample_ids('input')
 
 rule all:
-    input: 
+    input:
         "table/raw_OTU_table.txt",
         "table/QC_table.txt"
 
@@ -37,7 +37,7 @@ rule mkdir:
     shell: "mkdir -p unzip join filter fq_2_fa strip collapse blast blast_parse table"
 
 rule unzip:
-    input: 
+    input:
         lambda wildcards: sample_id_2_gz_pair[wildcards.sample_id]
     output:
         "unzip/{sample_id}_R1.fq",
@@ -81,16 +81,16 @@ rule collapse:
     shell: "tools/fastx/{version}/fastx_collapser -i {input} -o {output} -v"
 
 rule mkdb:
-    input: expand("database/{name}/{version}/{file}", name=config["database"]["name"], version=config["database"]["version"], file=config["database"]["fa_file"]) 
+    input: expand("database/{name}/{version}/{file}", name=config["database"]["name"], version=config["database"]["version"], file=config["database"]["fa_file"])
     output: touch("mkdb.done")
     version: config["tool_versions"]["blast+"]
     params: config["database"]["name"]
     shell: "tools/blast+/{version}/bin/makeblastdb -in {input} -out {params} -dbtype 'nucl' -input_type fasta"
 
 rule blast:
-    input: 
+    input:
         query = rules.collapse.output,
-        mkblastdb_done = "mkdb.done" 
+        mkblastdb_done = "mkdb.done"
     output: "blast/{sample_id}.txt"
     version: config["tool_versions"]["blast+"]
     params:
@@ -107,7 +107,7 @@ rule blast_parse:
 rule make_otu_table:
     input:
         blast_res = expand("blast_parse/{sample_id}.txt", sample_id=sample_ids),
-        taxonomy = expand("database/{name}/{version}/{file}", name=config["database"]["name"], version=config["database"]["version"], file=config["database"]["tax_file"]) 
+        taxonomy = expand("database/{name}/{version}/{file}", name=config["database"]["name"], version=config["database"]["version"], file=config["database"]["tax_file"])
     output: "table/raw_OTU_table.txt"
     shell: "python scripts/make_OTU_table.py -b {input.blast_res} -t {input.taxonomy} -o {output}"
 
@@ -119,8 +119,8 @@ rule qc:
         blast_count = expand("blast_parse/{sample_id}.txt", sample_id=sample_ids)
     output: "table/QC_table.txt"
     shell: "python scripts/qc.py -r {input.raw_count} -j {input.join_count} -f {input.filter_count} -b {input.blast_count} -o {output}"
-    
+
 rule clean:
-    params: config["database"]["name"] 
+    params: config["database"]["name"]
     shell: "rm -rf {params}.* mkdir.done mkdb.done unzip join filter fq_2_fa strip collapse blast blast_parse table"
 
