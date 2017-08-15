@@ -29,7 +29,12 @@ if __name__ == '__main__':
                     res_dict[target_id] += int(cnt)
                 else:
                     res_dict[target_id] = int(cnt)
-    res_df = pd.DataFrame.from_dict(res_dict, orient='index')
-    res_df.columns = [os.path.splitext(os.path.basename(args.input_fp))[0]]
+
+    columns = [os.path.splitext(os.path.basename(args.input_fp))[0]]
+    if len(res_dict) == 0:
+        res_df = pd.DataFrame(columns=columns)
+    else:
+        res_df = pd.DataFrame.from_dict(res_dict, orient='index')
+        res_df.columns = columns
     res_df.to_csv(args.output_fp, sep='\t')
 

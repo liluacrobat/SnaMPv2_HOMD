@@ -63,10 +63,9 @@ source deactivate
   Check snakemake version:
   ```
   snakemake -v
-  # 3.13.2
+  # 3.13.3
   ```
 
 ## Known Issues
 
-* empty sequence file
 * cluster time limit
