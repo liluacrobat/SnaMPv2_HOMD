@@ -29,7 +29,8 @@ sample_ids = get_sample_ids('input')
 
 rule all:
     input:
-        "table/raw_OTU_table.txt",
+        "table/raw_OTU_table_uncollapsed.txt",
+        "table/raw_OTU_table_collapsed.txt",
         "table/QC_table.txt"
 
 rule mkdir:
@@ -108,8 +109,10 @@ rule make_otu_table:
     input:
         blast_res = expand("blast_parse/{sample_id}.txt", sample_id=sample_ids),
         taxonomy = expand("database/{name}/{version}/{file}", name=config["database"]["name"], version=config["database"]["version"], file=config["database"]["tax_file"])
-    output: "table/raw_OTU_table.txt"
-    shell: "python scripts/make_OTU_table.py -b {input.blast_res} -t {input.taxonomy} -o {output}"
+    output:
+        uncollapsed_table = "table/raw_OTU_table_uncollapsed.txt",
+        collapsed_table = "table/raw_OTU_table_collapsed.txt"
+    shell: "python scripts/make_OTU_table.py -b {input.blast_res} -t {input.taxonomy} -u {output.uncollapsed_table} -c {output.collapsed_table}"
 
 rule qc:
     input:
