@@ -53,6 +53,15 @@ source deactivate
   snakemake -p -j 100 --cluster-config cluster.json --cluster "sbatch --partition {cluster.partition} --time {cluster.time} --nodes {cluster.nodes} --ntasks-per-node {cluster.ntasks-per-node}"
   ```
 
+3. Results
+
+ Three result files are placed under `table` directory.
+ 
+ * QC_table.txt  
+ * raw_OTU_table_collapsed.txt  
+ * raw_OTU_table_uncollapsed.txt
+ 
+
 ## Misc
 
   To remove generated files:
@@ -68,4 +77,4 @@ source deactivate
 
 ## Known Issues
 
-* cluster time limit
+* cluster time limit: if any of the jobs run of the time limit, it will be silently killed by CCR and the pipeline will keep waiting. To solve this, you need to terminate `Snakemake`, increase time limit specified in `cluster.json` accordingly and rerun the pipeline with extra option `--rerun-incomplete`.
