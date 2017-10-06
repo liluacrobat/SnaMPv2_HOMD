@@ -59,13 +59,13 @@ rule filter:
     params:
         percentage = config["parameters"]["quality_filtering"]["percentage"],
         qscore = config["parameters"]["quality_filtering"]["qscore"]
-    shell: "tools/fastx/{version}/fastq_quality_filter -i {input} -o {output} -q {params.qscore} -p {params.percentage} -Q33 -v"
+    shell: "if [ ! -s {input} ]; then touch {output}; else tools/fastx/{version}/fastq_quality_filter -i {input} -o {output} -q {params.qscore} -p {params.percentage} -Q33 -v; fi"
 
 rule fq_2_fa:
     input: rules.filter.output
     output: "fq_2_fa/{sample_id}.fa"
     version: config["tool_versions"]["fastx"]
-    shell: "tools/fastx/{version}/fastq_to_fasta -i {input} -o {output} -n -r -v -Q33"
+    shell: "if [ ! -s {input} ]; then touch {output}; else tools/fastx/{version}/fastq_to_fasta -i {input} -o {output} -n -r -v -Q33; fi"
 
 rule strip:
     input: rules.fq_2_fa.output
@@ -73,13 +73,13 @@ rule strip:
     params:
         forward_primer = config["parameters"]["strip"]["forward_primer"],
         reverse_primer = config["parameters"]["strip"]["reverse_primer"]
-    shell: "python scripts/strip.py -f {params.forward_primer} -r {params.reverse_primer} -i {input} -o {output}"
+    shell: "if [ ! -s {input} ]; then touch {output}; else python scripts/strip.py -f {params.forward_primer} -r {params.reverse_primer} -i {input} -o {output}; fi"
 
 rule collapse:
     input: rules.strip.output
     output: "collapse/{sample_id}.fa"
     version: config["tool_versions"]["fastx"]
-    shell: "tools/fastx/{version}/fastx_collapser -i {input} -o {output} -v"
+    shell: "if [ ! -s {input} ]; then touch {output}; else tools/fastx/{version}/fastx_collapser -i {input} -o {output} -v; fi"
 
 rule mkdb:
     input: expand("database/{name}/{version}/{file}", name=config["database"]["name"], version=config["database"]["version"], file=config["database"]["fa_file"])
@@ -125,5 +125,5 @@ rule qc:
 
 rule clean:
     params: config["database"]["name"]
-    shell: "rm -rf {params}.* mkdir.done mkdb.done unzip join filter fq_2_fa strip collapse blast blast_parse table"
+    shell: "rm -rf {params}.* mkdir.done mkdb.done unzip join filter fq_2_fa strip collapse blast blast_parse table slurm-*.out"
 
