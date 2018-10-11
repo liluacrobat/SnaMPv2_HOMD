@@ -17,7 +17,7 @@ def count_fq(fp):
     cnt = 0
     with open(fp) as f:
         for line in f:
-            cnt += 1
+            cnt += 1 
     cnt = cnt/4
     return cnt
 
